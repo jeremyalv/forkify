@@ -1,0 +1,3 @@
+MVC Architecture
+Only the controller can call & import functions from both model and view. 
+Model and view don't know each other, they're basically just sitting there waiting instructions from the controller.
