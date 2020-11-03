@@ -10,7 +10,7 @@ export const loadRecipe = async function(id) {
   try {
     const data = await getJSON(`${API_URL}/${id}`);
 
-    console.log(res, data);
+    console.log(data);
 
     let { recipe } = data.data;
     state.recipe = {
