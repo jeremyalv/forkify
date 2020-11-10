@@ -19,7 +19,7 @@ export default class View {
   _clear() {
     this._parentEl.innerHTML = '';
   }
-
+  
   renderSpinner() {
     const markup = `
       <div class="spinner">
