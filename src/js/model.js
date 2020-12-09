@@ -9,7 +9,8 @@ export const state = {
     results: [],
     page: 1,
     resultsPerPage: RES_PER_PAGE,
-  }
+  },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function(id) {
@@ -18,7 +19,7 @@ export const loadRecipe = async function(id) {
 
     // console.log(data);
 
-    let { recipe } = data.data;
+    let { recipe } = data.data; // API Call return object data, didalamnya ada property recipe yang di destructure (nama variabel yang dibuat harus sesuai)
     state.recipe = {
       id: recipe.id,
       title: recipe.title,
@@ -29,7 +30,12 @@ export const loadRecipe = async function(id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients
     };
-    // console.log(state.recipe);
+
+    if (state.bookmarks.some(bookmark => bookmark.id === id)) {
+      state.recipe.bookmarked = true;
+    } else {
+      state.recipe.bookmarked = false;
+    }
   } catch (err) {
     console.error(err);
     throw err;
@@ -50,7 +56,7 @@ export const loadSearchResults = async function(query) {
         image: rec.image_url,
       }
     });
-    // console.log(state.search.results);
+    state.search.page = 1;
   } catch (err) {
     console.error(`${err}`);
     throw err;
@@ -74,3 +80,22 @@ export const updateServings = function(newServings) {
   // Update servings value
   state.recipe.servings = newServings; // We do this after the forEach function to preserve the old state.recipe.servings
 };
+
+export const addBookmark = function(recipe) {
+  // Add bookmark
+  state.bookmarks.push(recipe);
+
+  // Mark current recipe as bookmark
+  if(recipe.id === state.recipe.id) state.recipe.bookmarked = true; 
+};
+
+export const deleteBookmark = function(id) {
+  // Delete bookmark
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  state.bookmarks.splice(index, 1);
+
+  // Mark current recipe as Not bookmarked
+  if(id === state.recipe.id) state.recipe.bookmarked = false; 
+}
+
+// When we add something (addBoomkark), we receive the entire data as the argument. When we delete something (deleteBookmark), we only receive the id.
