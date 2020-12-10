@@ -2,16 +2,18 @@ import icons from 'url:../../img/icons.svg';
 
 // Parent Class
 export default class View {
-  // Exporting the class itself
   _data;
 
-  render(data) { 
+  render(data, render=true) { 
     // A public method, so it could be called from the controller later
     if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
 
     
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear();
     this._parentEl.insertAdjacentHTML('afterbegin', markup);
   }
@@ -27,7 +29,6 @@ export default class View {
 
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
-      // console.log(curEl, newEl.isEqualNode(curEl));
 
       // Updates changed text
       if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '') {
@@ -35,7 +36,7 @@ export default class View {
       }
       // Update changed attributes
       if (!newEl.isEqualNode(curEl)) {
-        console.log(Array.from(newEl.attributes));
+        // console.log(Array.from(newEl.attributes));
         Array.from(newEl.attributes).forEach(attr => curEl.setAttribute(attr.name, attr.value));
       }
     })

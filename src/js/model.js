@@ -81,12 +81,18 @@ export const updateServings = function(newServings) {
   state.recipe.servings = newServings; // We do this after the forEach function to preserve the old state.recipe.servings
 };
 
+const persistBookmarks = function() {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
 export const addBookmark = function(recipe) {
   // Add bookmark
   state.bookmarks.push(recipe);
 
   // Mark current recipe as bookmark
   if(recipe.id === state.recipe.id) state.recipe.bookmarked = true; 
+
+  persistBookmarks();
 };
 
 export const deleteBookmark = function(id) {
@@ -96,6 +102,15 @@ export const deleteBookmark = function(id) {
 
   // Mark current recipe as Not bookmarked
   if(id === state.recipe.id) state.recipe.bookmarked = false; 
+
+  persistBookmarks();
 }
 
 // When we add something (addBoomkark), we receive the entire data as the argument. When we delete something (deleteBookmark), we only receive the id.
+
+const init = function() {
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+init();
+console.log(state.bookmarks);
